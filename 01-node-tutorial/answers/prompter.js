@@ -1,5 +1,5 @@
-const http = require("http");
-var StringDecoder = require("string_decoder").StringDecoder;
+import http from "http";
+import { StringDecoder } from "string_decoder";
 
 const getBody = (req, callback) => {
   const decode = new StringDecoder("utf-8");
@@ -21,7 +21,7 @@ const getBody = (req, callback) => {
 };
 
 // here, you could declare one or more variables to store what comes back from the form.
-let item = "Enter something below.";
+let item = "Enter your name below";
 
 // here, you can change the form below to modify the input fields and what is displayed.
 // This is just ordinary html with string interpolation.
@@ -45,7 +45,7 @@ const server = http.createServer((req, res) => {
       console.log("The body of the post is ", body);
       // here, you can add your own logic
       if (body["item"]) {
-        item = body["item"];
+        item = `Hello ${body["item"]}`;
       } else {
         item = "Nothing was entered.";
       }
