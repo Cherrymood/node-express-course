@@ -1,5 +1,6 @@
 import http from "http";
 import { StringDecoder } from "string_decoder";
+import EventEmitter from "events";
 
 const getBody = (req, callback) => {
   const decode = new StringDecoder("utf-8");
@@ -21,7 +22,7 @@ const getBody = (req, callback) => {
 };
 
 // here, you could declare one or more variables to store what comes back from the form.
-let item = "Enter your name below";
+let item = "Enter something below.";
 
 // here, you can change the form below to modify the input fields and what is displayed.
 // This is just ordinary html with string interpolation.
@@ -45,7 +46,7 @@ const server = http.createServer((req, res) => {
       console.log("The body of the post is ", body);
       // here, you can add your own logic
       if (body["item"]) {
-        item = `Hello ${body["item"]}`;
+        item = body["item"];
       } else {
         item = "Nothing was entered.";
       }
@@ -60,5 +61,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
+server.on("request", (req) => {
+  console.log("event received: ", req.method, req.url);
+});
 server.listen(3000);
 console.log("The server is listening on port 3000.");
