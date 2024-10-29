@@ -1,7 +1,13 @@
-function uniqueArray(arr) {
-  return [...new Set(arr)];
+const { updateWith } = require("lodash");
+
+let sum = 100;
+let currency = uah;
+let rate = 42;
+
+function exRate(sum, rate, currency) {
+  console.log(
+    `Convert ${sum} ${currency} to US dollar. We will get ${sum / rate}`
+  );
 }
 
-const arr = [1, 1, 1, 1, 1, 4, 4, 4, 4, 5, 7, 88, 99];
-
-console.log(uniqueArray(arr));
+exRate(sum, rate, currency);
