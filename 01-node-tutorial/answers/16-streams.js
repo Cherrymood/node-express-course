@@ -3,7 +3,7 @@ import path from "path";
 import EventEmitter from "events";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname); //get the directory name of the current module (the file where the code is written
-const filePath = path.join(__dirname, "content", "big.txt");
+const filePath = path.join(__dirname, "../content/big.txt");
 console.log(filePath);
 
 const highWaterMark = 200;
