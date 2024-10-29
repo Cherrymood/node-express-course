@@ -24,6 +24,7 @@ async function reader() {
   try {
     const data = await fs.readFile(filePath, "utf-8");
     console.log(data);
+    console.log("Readed");
   } catch (error) {
     console.log("Error", error);
   }
@@ -31,7 +32,8 @@ async function reader() {
 
 async function readWrite() {
   await writer();
-  reader();
+  await reader();
 }
 
-readWrite();
+await readWrite();
+console.log("the file was read");
