@@ -16,15 +16,13 @@ app.get(`/api/v1/products`, (req, res) => {
 });
 
 app.get(`/api/v1/products/:productID`, (req, res) => {
-  const idProduct = parseInt(req.params.productID);
+  const productId = parseInt(req.params.productId);
 
-  const product = data.products.find((item) => item.id == idProduct);
+  const product = data.products.find((item) => item.id == productId);
 
-  if (!product) {
-    res.json("That product was not found.");
-  } else {
-    res.json(product);
-  }
+  res.status(404).json({ message: "That product was not found." });
+
+  res.json(product);
 });
 
 app.get("/api/v1/query", (req, res) => {
@@ -37,16 +35,14 @@ app.get("/api/v1/query", (req, res) => {
     searchProducts = searchProducts.filter((product) =>
       product.name.toLowerCase().startsWith(search.toLowerCase())
     );
-    if (!searchProducts) {
-      res.json("There is no such product");
-    }
+
+    res.status(404).json({ message: "There is no such product" });
   }
 
   if (price) {
     searchProducts = searchProducts.filter((product) => product.price < price);
-    if (!searchProducts) {
-      res.json("There is no such product");
-    }
+
+    res.status(404).json({ message: "That product was not found." });
   }
 
   if (limit) {
