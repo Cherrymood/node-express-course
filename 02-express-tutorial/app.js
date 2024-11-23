@@ -1,6 +1,7 @@
 import express from "express";
 import data from "./data.js";
 import peopleRouter from "./public/routes-people.js";
+import cookieParser from "cookie-parser";
 
 const { products } = data;
 
@@ -18,10 +19,44 @@ app.use(express.static("./public"));
 app.use(logger);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
+
+function auth(req, res, next) {
+  const cookiesName = req.cookies?.name;
+
+  if (cookiesName) {
+    req.user = cookiesName;
+    next();
+  } else {
+    res.status(404).json({ message: "Unauthorized" });
+  }
+}
+
 app.use("/api/v1/people", peopleRouter);
 
 app.get("/api/v1/test", (req, res) => {
   res.json({ message: "It worked!" });
+});
+
+app.post("/logon", (req, res) => {
+  const { name } = req.body;
+  console.log(name);
+
+  if (name) {
+    res.cookie("name", name);
+    res.status(201).json({ success: true, message: `Hello, ${name}` });
+  } else {
+    res.status(400).json({ success: false, message: "Error" });
+  }
+});
+
+app.delete("/logoff", (req, res) => {
+  res.clearCookie("name");
+  res.status(200).json({ success: true, message: `Logged off` });
+});
+
+app.get("/test", auth, (req, res) => {
+  res.json({ message: `Hello, ${req.user} !` });
 });
 
 // app.get(`/api/v1/people`, logger, (req, res) => {
@@ -41,12 +76,21 @@ app.get("/api/v1/test", (req, res) => {
 
 app.get(`/api/v1/products`, logger, (req, res) => {
   res.json(data.products);
+  // Cookies that have not been signed
+  console.log("Cookies: ", req.cookies);
+
+  // Cookies that have been signed
+  console.log("Signed Cookies: ", req.signedCookies);
 });
 
 app.get(`/api/v1/products/:productID`, (req, res) => {
   const productId = parseInt(req.params.productID);
 
   const product = data.products.find((item) => item.id == productID);
+  console.log("Cookies: ", req.cookies);
+
+  // Cookies that have been signed
+  console.log("Signed Cookies: ", req.signedCookies);
 
   if (!product) {
     return res.status(404).json({ message: "That product was not found." });
