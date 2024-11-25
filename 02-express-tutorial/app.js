@@ -1,6 +1,6 @@
 import express from "express";
 import data from "./data.js";
-import peopleRouter from "./public/routes-people.js";
+import peopleRouter from "./routes/people.js";
 import cookieParser from "cookie-parser";
 
 const { products } = data;
@@ -28,7 +28,7 @@ function auth(req, res, next) {
     req.user = cookiesName;
     next();
   } else {
-    res.status(404).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
   }
 }
 
@@ -86,7 +86,7 @@ app.get(`/api/v1/products`, logger, (req, res) => {
 app.get(`/api/v1/products/:productID`, (req, res) => {
   const productId = parseInt(req.params.productID);
 
-  const product = data.products.find((item) => item.id == productID);
+  const product = data.products.find((item) => item.id == productId);
   console.log("Cookies: ", req.cookies);
 
   // Cookies that have been signed
@@ -124,7 +124,7 @@ app.get("/api/v1/query", (req, res) => {
   }
 
   if (limit) {
-    return (searchProducts = searchProducts.slice(0, parseInt(limit)));
+    searchProducts = searchProducts.slice(0, parseInt(limit));
   }
 
   res.json(searchProducts);
