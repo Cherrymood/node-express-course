@@ -1,0 +1,6 @@
+We should use asyncWrapper primarily for readability. Without it, we would need to manually handle
+ try/catch blocks for each of our async routes, which can make the code cluttered and harder to follow. 
+ By using asyncWrapper, we can centralize the error handling and avoid repeating the same error-handling logic in every route.
+  This ensures that all async route handlers behave consistently, making our code cleaner and easier to maintain. Additionally,
+ it simplifies the process of passing errors to the next middleware (next(error)),
+ allowing us to focus on the core logic of the routes without worrying about handling errors in each one.
