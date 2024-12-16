@@ -1,38 +1,33 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-import dotenv from "dotenv";
+import mongoose from "mongoose";
+// import Task from "../models/Task.js";
 
-dotenv.config();
-
-const clientMongo = new MongoClient(process.env.URL_MD, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-async function connectMongo() {
+export default async function connectDB(url) {
   try {
-    // Connect the client to the server
-    await clientMongo.connect();
-    // Send a ping to confirm a successful connection
-    await clientMongo.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    await mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB connected successfully!");
   } catch (error) {
-    console.error("Failed to connect to MongoDB:", error);
-    throw error;
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1); // Exit the process if connection fails
   }
 }
 
-async function closeMongo() {
-  try {
-    await clientMongo.close();
-    console.log("MongoDB connection closed");
-  } catch (error) {
-    console.error("Failed to close MongoDB connection:", error);
-  }
-}
+// const tasks = [
+//   { name: "Finish project", completed: true },
+//   { name: "Buy groceries", completed: false },
+//   { name: "Clean the house", completed: true },
+//   { name: "Study for exams", completed: false },
+//   { name: "Prepare dinner", completed: false },
+// ];
 
-export { clientMongo, connectMongo, closeMongo };
+// // Insert tasks into MongoDB
+// Task.insertMany(tasks)
+//   .then((result) => {
+//     console.log("Tasks inserted:", result);
+//     mongoose.connection.close(); // Close connection after operation
+//   })
+//   .catch((err) => {
+//     console.log("Error inserting tasks:", err);
+//   });

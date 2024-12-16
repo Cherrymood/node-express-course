@@ -1,20 +1,34 @@
 import express from "express";
-import tasks from "./routes/tasks.js";
-import { clientMongo } from "./db/connectMongo.js";
+import { router } from "./routes/tasks.js";
+import connectDB from "./db/connectMongo.js";
+import env from "dotenv";
+import notFound from "./middleware/not-found.js";
 
 const app = express();
 const port = 3000;
+env.config();
 
 // middleware
 app.use(express.json());
 app.use(express.static("./public"));
+app.use(notFound);
 
-await clientMongo.connect();
-//routes
-app.use("/api/v1/tasks", tasks);
+async function startServer() {
+  try {
+    // Connect to the database
+    await connectDB(process.env.URL_MD);
 
-await clientMongo.close();
+    // Routes
+    app.use("/api/v1/tasks", router);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+    // Start the server
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+  }
+}
+
+// Start the server
+startServer();
