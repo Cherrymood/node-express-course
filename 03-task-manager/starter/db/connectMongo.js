@@ -1,38 +1,14 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
-import dotenv from "dotenv";
+import mongoose from "mongoose";
 
-dotenv.config();
-
-const clientMongo = new MongoClient(process.env.URL_MD, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-async function connectMongo() {
+export default async function connectDB(url) {
   try {
-    // Connect the client to the server
-    await clientMongo.connect();
-    // Send a ping to confirm a successful connection
-    await clientMongo.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
+    await mongoose.connect(url, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("MongoDB connected successfully!");
   } catch (error) {
-    console.error("Failed to connect to MongoDB:", error);
-    throw error;
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1); // Exit the process if connection fails
   }
 }
-
-async function closeMongo() {
-  try {
-    await clientMongo.close();
-    console.log("MongoDB connection closed");
-  } catch (error) {
-    console.error("Failed to close MongoDB connection:", error);
-  }
-}
-
-export { clientMongo, connectMongo, closeMongo };
