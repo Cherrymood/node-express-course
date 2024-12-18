@@ -10,7 +10,8 @@ const getAllTasks = async (req, res, next) => {
 
 const createTask = async (req, res, next) => {
   try {
-    res.json(req.body);
+    const newTask = await Task.create(req.body);
+    res.status(201).json(newTask);
   } catch (error) {
     next(error);
   }
