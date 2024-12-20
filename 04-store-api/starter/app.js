@@ -5,6 +5,8 @@ import errorHandlerMiddleware from "./middleware/error-handler.js";
 import connectDB from "./db/connect.js";
 import productsRouter from "./routes/products.js";
 import "express-async-errors";
+// import Product from "./models/product.js";
+// import jsonProduct from "./products.js";
 
 const app = express();
 const port = 3000;
@@ -23,6 +25,8 @@ app.use(errorHandlerMiddleware);
 async function Start() {
   try {
     await connectDB(process.env.URL_MD);
+    // await Product.deleteMany();
+    // await Product.create(jsonProduct);
     app.listen(port, console.log(`Server is listening port ${3000}`));
   } catch (error) {
     console.log(error);
