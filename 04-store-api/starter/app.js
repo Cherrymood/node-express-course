@@ -4,6 +4,7 @@ import notFound from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import connectDB from "./db/connect.js";
 import productsRouter from "./routes/products.js";
+import "express-async-errors";
 
 const app = express();
 const port = 3000;
