@@ -18,7 +18,6 @@ async function startServer() {
     // Connect to the database
     await connectDB(process.env.URL_MD);
 
-    // Routes
     app.use("/api/v1/tasks", router);
 
     // Start the server
