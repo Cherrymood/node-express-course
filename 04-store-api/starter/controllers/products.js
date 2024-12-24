@@ -17,14 +17,7 @@ async function getAllProducts(req, res) {
   if (name) {
     queryObject.name = { $regex: name, $options: "i" };
   }
-  let result = Product.find(queryObject);
 
-  if (sort) {
-    const sortParams = sort.split(",").join(" "); //parse incoming qParams for using at server
-    result = result.sort(sortParams);
-  } else {
-    result = result.sort("createAt");
-  }
   if (numericFilters) {
     const operatorMap = {
       ">": "$gt",
@@ -33,7 +26,9 @@ async function getAllProducts(req, res) {
       "<": "$lt",
       "<=": "$lte",
     };
+
     const regEx = /\b(<|>|>=|=|<|<=)\b/g;
+
     let filters = numericFilters.replace(
       regEx,
       (match) => `-${operatorMap[match]}-`
@@ -45,6 +40,15 @@ async function getAllProducts(req, res) {
         queryObject[field] = { [operator]: Number(value) };
       }
     });
+  }
+
+  let result = Product.find(queryObject);
+
+  if (sort) {
+    const sortParams = sort.split(",").join(" "); //parse incoming qParams for using at server
+    result = result.sort(sortParams);
+  } else {
+    result = result.sort("createAt");
   }
 
   if (fields) {
