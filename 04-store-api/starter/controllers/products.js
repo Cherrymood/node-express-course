@@ -48,7 +48,7 @@ async function getAllProducts(req, res) {
     const sortParams = sort.split(",").join(" "); //parse incoming qParams for using at server
     result = result.sort(sortParams);
   } else {
-    result = result.sort("createAt");
+    result = result.sort("createdAt");
   }
 
   if (fields) {
